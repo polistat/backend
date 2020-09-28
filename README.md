@@ -6,7 +6,7 @@ This code is one of the final steps for our model. After we finish averaging pol
 ### Variables:
 - **num_simulations:** The number of simulations to run
 - **electoral counts:** A 1x2 matrix, whose first cell contains the electoral votes going to candidate 1, and whose second cell contains the electoral votes going to candidate 2.
-- outcome counts:** A 1x3 matrix, whose first cell counts the number of times candidate 1 wins, whose second cell counts the number of times candidate 2 wins, and whose third cell contains the number of times neither candidate wins (probably unnecessary for our model)
+- **outcome counts:** A 1x3 matrix, whose first cell counts the number of times candidate 1 wins, whose second cell counts the number of times candidate 2 wins, and whose third cell contains the number of times neither candidate wins (probably unnecessary for our model)
 - **turnout_mean:** The average national voter turnout. The purpose of this is to provide some level of variance that is the same for all states
     -We might need to do some transformations on this number to adhere to how we are representing the states's leans
 - **turnout_variance:** The variance for national voter turnout
