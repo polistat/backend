@@ -10,7 +10,7 @@ This code is one of the final steps for our model. After we finish averaging pol
 - **turnout_mean:** The average national voter turnout. The purpose of this is to provide some level of variance that is the same for all states
     -We might need to do some transformations on this number to adhere to how we are representing the states's leans
 - **turnout_variance:** The variance for national voter turnout
-- **states: A 51x4 matrix, whose rows represent individual states. The first column contains the state's name, the second column contains the state's lean, the third column contains the state's variance, and the fourth column contains the state's electoral votes
+- **states:** A 51x4 matrix, whose rows represent individual states. The first column contains the state's name, the second column contains the state's lean, the third column contains the state's variance, and the fourth column contains the state's electoral votes
 - **turnout_shift:** A random number calculated to provide some level of variance for all states during individual simulations
 - **state_outcome:** The shifted outcome of the election in a state selected from a normal distribution
 - **candidate_1_win_percentage:** the number of wins counted for candidate 1 divided by the number of simulations, multiplied by 100
