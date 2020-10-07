@@ -6,3 +6,5 @@ This code is one of the final steps for our model. After we finish averaging pol
 This code is to be run during simulations. Two separate schemes for correlating states are described.
 ## Simulations_with_Correlation.py
 Implementation of Correlations with simulations
+## Simulations.Rmd
+Implementation of Correlations with simulations
