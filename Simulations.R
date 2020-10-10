@@ -3,9 +3,11 @@ library(dplyr)
 library(leaps)
 library(useful)
 
+currentDate <- as.Date(scan(file = "currentDate.txt", what = "character"))
+
 state_cor <- as.matrix(read_csv("StateCorrelationWith7") %>% select(-c(X1)))
 
-states <- read.csv("AveragedPolls.csv") %>% 
+states <- read.csv(paste("AveragedPolls - ", currentDate, ".csv", sep = "")) %>% 
   rename(State = StateName, mean = StateMean, variance = Variance, electoral_votes = ElectoralVotes) 
 states <- cbind(states, state_outcome = rep(0, nrow(states)), distance = rep(0, nrow(states))) %>% 
   mutate(sd = variance^(1/2)) %>% 
