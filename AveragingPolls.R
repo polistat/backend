@@ -211,4 +211,4 @@ results <- left_join(results, demographics, by = "StateName") %>%
   )
 
 write.csv(results, file = "AveragedPolls.csv")
-```
+
