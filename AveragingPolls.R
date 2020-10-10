@@ -7,6 +7,7 @@ library(stringr)
 library(metafor)
 
 
+
 currentDate <- as.Date(scan(file = "currentDate.txt", what = "character"))
 
 
@@ -18,14 +19,30 @@ polls <- read.csv("pollsData.csv") %>%
     Sample.Size = Sample.Size,
     Sample.Type = Sample.Type,
     Start.Date = as.Date(Start.Date, format = "%m/%d/%y"), 
-    Biden = (Biden + (100 - Biden - Trump)/2)/100, 
-    Trump = (Trump + (100 - Biden - Trump)/2)/100)
+    Biden = Biden, 
+    Trump = Trump) %>% 
+  mutate(diff = (100 - Biden - Trump)/2) %>% 
+  transmute(
+    State = State,
+    Sample.Size = Sample.Size,
+    Sample.Type = Sample.Type,
+    Start.Date = Start.Date,
+    Biden = (Biden + diff)/100, 
+    Trump = (Trump + diff)/100) 
+
 
 polls <- polls[polls$Start.Date >= as.Date("2020-08-12", format = "%Y-%m-%d"), ]
+polls$State <- gsub("Maine CD-1", "Maine", polls$State)
+polls$State <- gsub("Nebraska CD-1", "Nebraska", polls$State)
+polls$State <- gsub("Nebraska CD-3", "Nebraska", polls$State)
 polls <- arrange(polls, State, Sample.Type, desc(Start.Date))
 polls <- na.omit(polls)
 
+priors <- read.csv("Priors.csv") %>% 
+  rename(PriorsMean = StateMean)
 
+demographics <- read.csv("Standardized_State_priors.csv") %>% 
+  rename(StateName = State)
 
 
 
@@ -38,13 +55,13 @@ z.test.method <- function(state, date, size, population, biden, trump) {
     numBlocks <- 0
   }
   
-  #print(numBlocks)
+ 
   
   if(numBlocks == 0){
     if(nrow(df) == 0){
-      return(paste(state, "NA", "NA", sep = ", "))
+      return(paste(state, 0, 0, 0, sep = ", "))
     } else if(nrow(df) == 1){
-      return(paste(state, trump, (trump*biden/size)^(1/2), sep = ", "))
+      return(paste(state, trump, (trump*biden/size)^(1/2), 1, sep = ", "))
     }
     else{
       block1 <-  escalc(xi = round(size*trump), ni = size, measure = "PR")
@@ -54,7 +71,7 @@ z.test.method <- function(state, date, size, population, biden, trump) {
       mean1 <-  block1.rma$beta[1]
       sd1 <-  block1.rma$se 
     }
-    return(paste(state[1], mean1, sd1, sep = ", "))
+    return(paste(state[1], mean1, sd1, length(block1$size), sep = ", "))
   }
   else if(numBlocks == 1){
     block1df <- df
@@ -65,7 +82,7 @@ z.test.method <- function(state, date, size, population, biden, trump) {
     
     mean1 <-  block1.rma$beta[1]
     sd1 <-  block1.rma$se 
-    return(paste(state[1], mean1, sd1, sep = ", "))
+    return(paste(state[1], mean1, sd1, length(block1$size), sep = ", "))
   } 
   else{
     blocks <- c(1:(numBlocks-1))
@@ -86,9 +103,7 @@ z.test.method <- function(state, date, size, population, biden, trump) {
       }
       block2df <- df[df$date >= currentDate - (numBlocks - i)*10 & df$date < currentDate - (numBlocks - i - 1)*10, ]
       
-      #print(i)
-      #print(block1df)
-      #print(block2df)
+     
       
       if(nrow(block1df) > 0 & nrow(block2df) == 0){
         df <- arrange(rbind(
@@ -128,7 +143,7 @@ z.test.method <- function(state, date, size, population, biden, trump) {
           n = c(sum(block1df$size), sum(block2df$size))
         )
         
-        #print(ztest$p.value)
+        
         
         if(ztest$p.value >  0.05){
           df <- arrange(rbind(
@@ -152,23 +167,44 @@ z.test.method <- function(state, date, size, population, biden, trump) {
         block2$vi <- block2$vi + (1/30 * (1-(block2df$trump+block2df$biden)))^2
         block2 <- rma(yi = block2$yi, vi = block2$vi)
         
-        #print(block2df)
         
+        
+        block.finaldf <- block2df
         block.final <- block2
       }
     }
-    
-    return(paste(state[1], block.final$beta[1], block.final$se, sep = ", "))
+
+    return(paste(state[1], block.final$beta[1], block.final$se, length(block.finaldf$size), sep = ", "))
     
   }
 }
+
+
 
 
 results <- polls %>% 
   group_by(State) %>% 
   summarize(result = z.test.method(state = State, date = Start.Date, size = Sample.Size, population = Sample.Type, biden = Biden, trump = Trump)) 
 
-results <- as.data.frame(str_split(results$result, ", ", simplify = TRUE)) %>% rename(State = V1, Mean = V2, Variance = V3)
+results <- full_join(priors,
+                     as.data.frame(str_split(results$result, ", ", simplify = TRUE)) %>% 
+                       transmute(
+                         StateName = V1,
+                         PollsMean = as.numeric(as.character(V2))*100,
+                         Variance = (as.numeric(as.character(V3))^2*10000),
+                         NumPolls = as.numeric(as.character(V4))
+                       ),
+                     by = "StateName")
+results[is.na(results)] <- 0
+results <- results %>% 
+  mutate(StateMean = 1.92/pi * atan(0.65 * NumPolls) * PollsMean + (1 - 1.92/pi * atan(0.65 * NumPolls)) * PriorsMean)
+results <- left_join(results, demographics, by = "StateName") %>% 
+  transmute(
+    StateName = StateName,
+    StateMean = StateMean,
+    Variance = Variance + 0.6 * (CoVI + 2.06) + ((as.numeric(as.Date("2020-11-03") - currentDate))/7)^(1/2)/4,
+    ElectoralVotes = ElectoralVotes
+  )
 
 write.csv(results, file = "AveragedPolls")
 
