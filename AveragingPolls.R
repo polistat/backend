@@ -210,5 +210,5 @@ results <- left_join(results, demographics, by = "StateName") %>%
     BPI = BPI
   )
 
-write.csv(results, file = "AveragedPolls.csv")
+write.csv(results, file = paste("AveragedPolls - ", currentDate, ".csv", sep = ""))
 
