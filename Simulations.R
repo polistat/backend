@@ -24,7 +24,7 @@ row.rnorm <- function(x,y) rnorm(1, mean = x, sd = y)
 
 
 #variables
-num_simulations <- 1000
+num_simulations <- 1000000
 electoral_counts <- as.data.frame(matrix(c(0,0), ncol = 2, nrow = 1, dimnames = list(NULL, c("rep_electoral_counts", "dem_electoral_counts"))))
 outcome_counts <- as.data.frame(matrix(c(0,0,0), ncol = 3, nrow = 1, dimnames = list(NULL, c("rep_win_counts", "dem_win_counts", "split_win_counts"))))
 
