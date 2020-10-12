@@ -30,7 +30,7 @@ polls <- read.csv("pollsData.csv") %>%
     Trump = (Trump + diff)/100) 
 
 
-polls <- polls[polls$Start.Date >= as.Date("2020-08-12", format = "%Y-%m-%d") | polls$Start.Date <= currentDate, ]
+polls <- polls[polls$Start.Date >= as.Date("2020-08-12", format = "%Y-%m-%d") & polls$Start.Date <= currentDate, ]
 
 polls$State <- gsub("Maine CD-1", "Maine", polls$State)
 polls$State <- gsub("Nebraska CD-1", "Nebraska", polls$State)
