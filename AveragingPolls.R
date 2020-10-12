@@ -6,12 +6,12 @@ library(stringr)
 library(metafor)
 
 
+args <- commandArgs(trailingOnly=TRUE)
+dir <- args[1]
+currentDate <- as.Date(args[2])
 
-currentDate <- as.Date(scan(file = "currentDate.txt", what = "character"))
 
-
-
-polls <- read.csv("pollsData.csv") %>% 
+polls <- read.csv(paste(dir, "538.csv", sep="/")) %>% 
   select(-c("Poll", "Source", "End.Date")) %>%
   transmute(
     State = State,
@@ -38,10 +38,10 @@ polls$State <- gsub("Nebraska CD-3", "Nebraska", polls$State)
 polls <- arrange(polls, State, Sample.Type, desc(Start.Date))
 polls <- na.omit(polls)
 
-priors <- read.csv("Priors.csv") %>% 
+priors <- read.csv(paste(dir, "Priors.csv", sep="/")) %>% 
   rename(PriorsMean = StateMean)
 
-demographics <- read.csv("Standardized_State_priors.csv") %>% 
+demographics <- read.csv(paste(dir, "Standardized_State_priors.csv", sep="/")) %>% 
   rename(StateName = State)
 
 

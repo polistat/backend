@@ -3,9 +3,11 @@ library(dplyr)
 library(leaps)
 library(useful)
 
-currentDate <- as.Date(scan(file = "currentDate.txt", what = "character"))
+args <- commandArgs(trailingOnly=TRUE)
+dir <- args[1]
+currentDate <- as.Date(args[2])
 
-state_cor <- as.matrix(read_csv("StateCorrelationWith7") %>% select(-c(X1)))
+state_cor <- as.matrix(read_csv(paste(dir, "StateCorrelationWith7", sep="/")) %>% select(-c(X1)))
 
 states <- read.csv(paste("AveragedPolls - ", currentDate, ".csv", sep = "")) %>% 
   rename(State = StateName, mean = StateMean, variance = Variance, electoral_votes = ElectoralVotes) 
