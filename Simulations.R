@@ -30,7 +30,7 @@ num_simulations <- 1000000
 electoral_counts <- as.data.frame(matrix(c(0,0), ncol = 2, nrow = 1, dimnames = list(NULL, c("rep_electoral_counts", "dem_electoral_counts"))))
 outcome_counts <- as.data.frame(matrix(c(0,0,0), ncol = 3, nrow = 1, dimnames = list(NULL, c("rep_win_counts", "dem_win_counts", "split_win_counts"))))
 
-electoral_bins <- (matrix(rep(0, 538), ncol = 538, nrow = 1))
+electoral_bins <- (matrix(rep(0, 538), ncol = 1, nrow = 538))
 
 stateResults <- cbind(
   data.frame(State = states$State, Mean = rep(0, nrow(states)), BidenWins = rep(0, nrow(states)), TrumpWins = rep(0, nrow(states))),
@@ -83,7 +83,7 @@ while(sim_count <= num_simulations){
     outcome_counts$split_win_counts = outcome_counts$split_win_counts + 1
   }
   
-  electoral_bins[1,electoral_counts$rep_electoral_counts] = electoral_bins[1,electoral_counts$rep_electoral_counts] + 1
+  electoral_bins[electoral_counts$rep_electoral_counts, 1] = electoral_bins[electoral_counts$rep_electoral_counts, 1] + 1
   
   sim_count = sim_count + 1
 }
