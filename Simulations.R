@@ -97,8 +97,8 @@ win_counts <- data.frame(rep_win_percentage, dem_win_percentage, split_win_perce
 
 
 write.csv(stateResults, file = paste("StateOutcomes - ", currentDate, ".csv", sep = ""))
-write.csv(outcome_counts, file = paste("NaionalOutcomes - ", currentDate, ".csv", sep = ""))
-write.csv(win_counts, file = paste("NaionalWins - ", currentDate, ".csv", sep = ""))
+write.csv(outcome_counts, file = paste("NationalOutcomes - ", currentDate, ".csv", sep = ""))
+write.csv(win_counts, file = paste("NationalWins - ", currentDate, ".csv", sep = ""))
 write.csv(electoral_bins, file = paste("ElectoralBins - ", currentDate, ".csv", sep = ""))
 
 
