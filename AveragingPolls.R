@@ -205,7 +205,7 @@ results <- left_join(results, demographics, by = "StateName") %>%
   transmute(
     StateName = StateName,
     StateMean = StateMean,
-    Variance = Variance + ((0.6 * (CoVI + 2.06))/100)^2 + (((as.numeric(as.Date("2020-11-03") - currentDate))/7)^(1/2)/400)^2,
+    Variance = Variance + ((0.6 * (CoVI + 2.06))/100)/9 + (((as.numeric(as.Date("2020-11-03") - currentDate))/7)^(1/2)/400)/9,
     ElectoralVotes = ElectoralVotes,
     BPI = BPI
   )
