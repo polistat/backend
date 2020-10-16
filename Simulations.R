@@ -56,7 +56,7 @@ while(sim_count <= num_simulations){
 
   states$distance = states$state_outcome - states$mean
   shifts <- t(states$distance %*% state_cor)/cor_sum
-  states$state_outcome + shifts
+  states$state_outcome <- states$state_outcome + shifts
   
   
 
