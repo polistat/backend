@@ -66,7 +66,7 @@ z.test.method <- function(state, date, size, population, biden, trump) {
     else{
       block1 <-  escalc(xi = round(size*trump), ni = size, measure = "PR")
       block1$vi <- block1$vi + (1/30 * (1 - (trump + biden)))^2
-      block1.rma <- rma(yi = block1$yi, vi = block1$vi, control=list(maxiter=1000))
+      block1.rma <- rma(yi = block1$yi, vi = block1$vi, control=list(stepadj=0.5, maxiter=1000))
       
       mean1 <-  block1.rma$beta[1]
       sd1 <-  block1.rma$se 
@@ -78,7 +78,7 @@ z.test.method <- function(state, date, size, population, biden, trump) {
     
     block1 <- escalc(data = block1df, xi = round(size*trump), ni = size, measure = "PR")
     block1$vi <- block1$vi + (1/30 * (1 - (block1df$trump + block1df$biden)))^2
-    block1.rma <- rma(yi = block1$yi, vi = block1$vi, control=list(maxiter=1000))
+    block1.rma <- rma(yi = block1$yi, vi = block1$vi, control=list(stepadj=0.5, maxiter=1000))
     
     mean1 <-  block1.rma$beta[1]
     sd1 <-  block1.rma$se 
@@ -125,7 +125,7 @@ z.test.method <- function(state, date, size, population, biden, trump) {
         } else {
           block1 <- escalc(data = block1df, xi = round(size*trump), ni = size, measure = "PR")
           block1$vi <- block1$vi + (1/30 * (1-(block1df$trump+block1df$biden)))^2
-      block1.rma <- rma(yi = block1$yi, vi = block1$vi, control=list(maxiter=1000))
+      block1.rma <- rma(yi = block1$yi, vi = block1$vi, control=list(stepadj=0.5, maxiter=1000))
           mean1 <-  block1.rma$beta[1]
         }
         
@@ -134,7 +134,7 @@ z.test.method <- function(state, date, size, population, biden, trump) {
         } else {
           block2 <- escalc(data = block2df, xi = round(size*trump), ni = size, measure = "PR")
           block2$vi <- block2$vi + (1/30 * (1-(block2df$trump+block2df$biden)))^2
-          block2.rma <- rma(yi = block2$yi, vi = block2$vi, control=list(maxiter=1000))
+          block2.rma <- rma(yi = block2$yi, vi = block2$vi, control=list(stepadj=0.5, maxiter=1000))
           mean2 <-  block2.rma$beta[1]
         }
         
@@ -165,7 +165,7 @@ z.test.method <- function(state, date, size, population, biden, trump) {
         block2df <- df[df$date >= currentDate - (numBlocks - i)*10 & df$date < currentDate - (numBlocks - i - 1)*10, ]
         block2 <- escalc(data = block2df, xi = round(size*trump), ni = size, measure = "PR")
         block2$vi <- block2$vi + (1/30 * (1-(block2df$trump+block2df$biden)))^2
-        block2 <- rma(yi = block2$yi, vi = block2$vi, control=list(maxiter=1000))
+        block2 <- rma(yi = block2$yi, vi = block2$vi, control=list(stepadj=0.5, maxiter=1000))
         
 
         
